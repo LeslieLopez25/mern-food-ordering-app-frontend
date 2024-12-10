@@ -12,7 +12,7 @@ const ManageRestaurantPage = () => {
   const { updateRestaurant, isLoading: isUpdateLoading } =
     useUpdateMyRestaurant();
 
-  const isEditing = !!restaurant;
+  const isEditing = !!restaurant && !!restaurant.imageUrl;
 
   return (
     <ManageRestaurantForm
