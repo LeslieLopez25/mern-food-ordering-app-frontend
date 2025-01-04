@@ -3,12 +3,14 @@ import { useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import LoadingButton from "./LoadingButton";
 import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
-import UserProfileForm from "@/forms/user-profile-form/UserProfileForm";
+import UserProfileForm, {
+  UserFormData,
+} from "@/forms/user-profile-form/UserProfileForm";
 import { useGetMyUser } from "@/api/MyUserApi";
 
 type Props = {
   onCheckout: (userFormData: UserFormData) => void;
-  disable: boolean;
+  disabled: boolean;
 };
 
 const CheckoutButton = ({ onCheckout, disabled }: Props) => {
@@ -45,7 +47,9 @@ const CheckoutButton = ({ onCheckout, disabled }: Props) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-orange-500 flex-1">Go to checkout</Button>
+        <Button disabled={disabled} className="bg-orange-500 flex-1">
+          Go to checkout
+        </Button>
       </DialogTrigger>
       <DialogContent className="max-w[425px] md:min-w[700px] bg-gray-50">
         <UserProfileForm
