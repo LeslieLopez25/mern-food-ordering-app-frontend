@@ -36,7 +36,13 @@ const UsernameMenu = () => {
         <Separator />
         <DropdownMenuItem>
           <Button
-            onClick={() => logout()}
+            onClick={() =>
+              logout({
+                logoutParams: {
+                  returnTo: import.meta.env.VITE_AUTH0_LOGOUT_URL,
+                },
+              })
+            }
             className="flex flex-1 font-bold bg-orange-500"
           >
             Log Out
