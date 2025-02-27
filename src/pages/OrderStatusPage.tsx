@@ -1,23 +1,40 @@
+import { useEffect, useState } from "react";
 import { useGetMyOrders } from "@/api/OrderApi";
 import OrderStatusDetail from "@/components/OrderStatusDetail";
 import OrderStatusHeader from "@/components/OrderStatusHeader";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
+import { Order } from "@/types"; // Import Order type
 
 const OrderStatusPage = () => {
   const { orders, isLoading } = useGetMyOrders();
+  const [visibleOrders, setVisibleOrders] = useState<Order[]>([]); // ✅ Explicitly type the state
+
+  useEffect(() => {
+    if (!orders) return;
+
+    setVisibleOrders(orders);
+
+    const timer = setTimeout(() => {
+      setVisibleOrders((currentOrders) =>
+        currentOrders.filter((order) => order.status !== "delivered")
+      );
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [orders]);
 
   if (isLoading) {
     return "Loading...";
   }
 
-  if (!orders || orders.length === 0) {
-    return "No orders found";
+  if (!visibleOrders || visibleOrders.length === 0) {
+    return "No active orders";
   }
 
   return (
     <div className="space-y-10">
-      {orders.map((order) => (
-        <div className="space-y-10 bg-gray-50 p-10 rounded-lg">
+      {visibleOrders.map((order) => (
+        <div key={order._id} className="space-y-10 bg-gray-50 p-10 rounded-lg">
           <OrderStatusHeader order={order} />
           <div className="grid gap-10 md:grid-cols-2">
             <OrderStatusDetail order={order} />
@@ -29,6 +46,9 @@ const OrderStatusPage = () => {
               />
             </AspectRatio>
           </div>
+          {order.status === "delivered" && (
+            <p className="text-green-500 font-bold text-center">Delivered</p>
+          )}
         </div>
       ))}
     </div>
