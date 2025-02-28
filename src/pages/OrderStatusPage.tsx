@@ -17,24 +17,40 @@ const OrderStatusPage = () => {
   useEffect(() => {
     if (!orders) return;
 
-    const nonDeliveredOrders = orders.filter(
-      (order) => order.status !== "delivered"
-    );
-    setVisibleOrders(nonDeliveredOrders);
+    // Keep track of new orders (prevents overwriting previous ones)
+    setVisibleOrders((prev) => {
+      const newOrders = orders.filter(
+        (o) => !prev.some((po) => po._id === o._id)
+      );
+      return [...prev, ...newOrders];
+    });
 
+    // Find new delivered orders that haven't been scheduled for archiving yet
     orders.forEach((order) => {
       if (order.status === "delivered" && !deliveredOrders.has(order._id)) {
         setDeliveredOrders((prev) => new Set(prev).add(order._id));
 
-        setTimeout(() => {
+        // Delay the archive process for new delivered orders
+        const timer = setTimeout(() => {
           archiveOrder(order._id);
-          setVisibleOrders((currentOrders) =>
-            currentOrders.filter((o) => o._id !== order._id)
+
+          setDeliveredOrders((prev) => {
+            const newSet = new Set(prev);
+            newSet.delete(order._id);
+            return newSet;
+          });
+
+          // Remove the order from UI **only if it's still in delivered state**
+          setVisibleOrders((prevOrders) =>
+            prevOrders.filter((o) => o._id !== order._id)
           );
         }, 5000);
+
+        // Cleanup the timeout when the component unmounts or if order changes
+        return () => clearTimeout(timer);
       }
     });
-  }, [orders, archiveOrder, deliveredOrders]);
+  }, [orders, archiveOrder, deliveredOrders]); // ✅ Only runs when `orders` change
 
   if (isLoading) {
     return "Loading...";

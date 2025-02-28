@@ -11,7 +11,7 @@ export const useGetMyOrders = () => {
   const getMyOrdersRequest = async (): Promise<Order[]> => {
     const accessToken = await getAccessTokenSilently();
 
-    const response = await fetch(`${API_BASE_URL}/api/order?archived=false`, {
+    const response = await fetch(`${API_BASE_URL}/api/order`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -24,15 +24,17 @@ export const useGetMyOrders = () => {
     return response.json();
   };
 
-  const { data: orders, isLoading } = useQuery(
-    "fetchMyOrders",
-    getMyOrdersRequest,
-    {
-      refetchInterval: 5000,
-    }
-  );
+  const {
+    data: orders,
+    isLoading,
+    refetch,
+  } = useQuery("fetchMyOrders", getMyOrdersRequest, {
+    refetchInterval: 5000,
+    staleTime: 0,
+    cacheTime: 0,
+  });
 
-  return { orders, isLoading };
+  return { orders, isLoading, refetch };
 };
 
 export const useArchiveOrder = () => {
