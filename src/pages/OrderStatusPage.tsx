@@ -3,25 +3,38 @@ import { useGetMyOrders } from "@/api/OrderApi";
 import OrderStatusDetail from "@/components/OrderStatusDetail";
 import OrderStatusHeader from "@/components/OrderStatusHeader";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
-import { Order } from "@/types"; // Import Order type
+import { Order } from "@/types";
+import { useArchiveOrder } from "@/api/OrderApi";
 
 const OrderStatusPage = () => {
   const { orders, isLoading } = useGetMyOrders();
-  const [visibleOrders, setVisibleOrders] = useState<Order[]>([]); // ✅ Explicitly type the state
+  const { archiveOrder } = useArchiveOrder();
+  const [visibleOrders, setVisibleOrders] = useState<Order[]>([]);
+  const [deliveredOrders, setDeliveredOrders] = useState<Set<string>>(
+    new Set()
+  );
 
   useEffect(() => {
     if (!orders) return;
 
-    setVisibleOrders(orders);
+    const nonDeliveredOrders = orders.filter(
+      (order) => order.status !== "delivered"
+    );
+    setVisibleOrders(nonDeliveredOrders);
 
-    const timer = setTimeout(() => {
-      setVisibleOrders((currentOrders) =>
-        currentOrders.filter((order) => order.status !== "delivered")
-      );
-    }, 5000);
+    orders.forEach((order) => {
+      if (order.status === "delivered" && !deliveredOrders.has(order._id)) {
+        setDeliveredOrders((prev) => new Set(prev).add(order._id));
 
-    return () => clearTimeout(timer);
-  }, [orders]);
+        setTimeout(() => {
+          archiveOrder(order._id);
+          setVisibleOrders((currentOrders) =>
+            currentOrders.filter((o) => o._id !== order._id)
+          );
+        }, 5000);
+      }
+    });
+  }, [orders, archiveOrder, deliveredOrders]);
 
   if (isLoading) {
     return "Loading...";
