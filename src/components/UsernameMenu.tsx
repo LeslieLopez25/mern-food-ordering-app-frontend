@@ -9,9 +9,21 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Link } from "react-router-dom";
 import { Separator } from "./ui/separator";
 import { Button } from "./ui/button";
+import { useQueryClient } from "react-query";
 
 const UsernameMenu = () => {
   const { user, logout } = useAuth0();
+  const queryClient = useQueryClient();
+
+  const handleLogout = () => {
+    logout({
+      logoutParams: { returnTo: import.meta.env.VITE_AUTH0_LOGOUT_URL },
+    });
+
+    setTimeout(() => {
+      queryClient.clear();
+    }, 1000);
+  };
 
   return (
     <DropdownMenu>
@@ -36,13 +48,7 @@ const UsernameMenu = () => {
         <Separator />
         <DropdownMenuItem>
           <Button
-            onClick={() =>
-              logout({
-                logoutParams: {
-                  returnTo: import.meta.env.VITE_AUTH0_LOGOUT_URL,
-                },
-              })
-            }
+            onClick={handleLogout}
             className="flex flex-1 font-bold bg-orange-500"
           >
             Log Out

@@ -8,6 +8,7 @@ import ManageRestaurantPage from "./pages/ManageRestaurantPage";
 import SearchPage from "./pages/SearchPage";
 import DetailPage from "./pages/DetailPage";
 import OrderStatusPage from "./pages/OrderStatusPage";
+import ArchivedOrdersPage from "./pages/ArchivedOrdersPage";
 
 const AppRoutes = () => {
   return (
@@ -43,6 +44,14 @@ const AppRoutes = () => {
           element={
             <Layout>
               <OrderStatusPage />
+            </Layout>
+          }
+        />
+        <Route
+          path="/archived-orders"
+          element={
+            <Layout>
+              <ArchivedOrdersPage />
             </Layout>
           }
         />
