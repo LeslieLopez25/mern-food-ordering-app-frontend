@@ -107,6 +107,27 @@ export const useGetArchivedOrders = () => {
   return { orders, isLoading };
 };
 
+export const useArchiveOrders = () => {
+  const { getAccessTokenSilently } = useAuth0();
+
+  const archiveOrdersRequest = async () => {
+    const accessToken = await getAccessTokenSilently();
+    const response = await fetch(`${API_BASE_URL}/api/order/archive-orders`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to archive orders");
+    }
+  };
+
+  return useMutation(archiveOrdersRequest);
+};
+
 type CheckoutSessionRequest = {
   cartItems: {
     menuItemId: string;

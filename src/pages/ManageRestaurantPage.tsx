@@ -1,5 +1,6 @@
 import {
   useCreateMyRestaurant,
+  useGetArchivedOrders,
   useGetMyRestaurant,
   useGetMyRestaurantOrders,
   useUpdateMyRestaurant,
@@ -16,6 +17,8 @@ const ManageRestaurantPage = () => {
     useUpdateMyRestaurant();
 
   const { orders } = useGetMyRestaurantOrders();
+  const { data: archivedOrders = [], isLoading: isArchivedLoading } =
+    useGetArchivedOrders();
 
   const isEditing = !!restaurant && !!restaurant.imageUrl;
 
@@ -23,6 +26,7 @@ const ManageRestaurantPage = () => {
     <Tabs defaultValue="orders">
       <TabsList>
         <TabsTrigger value="orders">Orders</TabsTrigger>
+        <TabsTrigger value="archived-orders">Archived Orders</TabsTrigger>
         <TabsTrigger value="manage-restaurant">Manage Restaurant</TabsTrigger>
       </TabsList>
       <TabsContent
@@ -33,6 +37,23 @@ const ManageRestaurantPage = () => {
         {orders?.map((order) => (
           <OrderItemCard order={order} />
         ))}
+      </TabsContent>
+      <TabsContent
+        value="archived-orders"
+        className="space-y-5 bg-gray-50 pg-10 rounded-lg"
+      >
+        <h2 className="text-2xl font-bold">
+          {archivedOrders?.length || 0} archived orders
+        </h2>
+        {isArchivedLoading ? (
+          <p>Loading archived orders...</p>
+        ) : archivedOrders.length > 0 ? (
+          archivedOrders.map((order) => (
+            <OrderItemCard key={order._id} order={order} isArchived />
+          ))
+        ) : (
+          <p>No archived orders yet.</p>
+        )}
       </TabsContent>
       <TabsContent value="manage-restaurant">
         <ManageRestaurantForm
