@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { Toaster } from "sonner";
 
 import "./global.css";
+import TokenRefresher from "./components/TokenRefresher";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,6 +22,7 @@ createRoot(document.getElementById("root")!).render(
     <Router>
       <QueryClientProvider client={queryClient}>
         <Auth0ProviderWithNavigate>
+          <TokenRefresher />
           <AppRoutes />
           <Toaster visibleToasts={1} position="top-right" richColors />
         </Auth0ProviderWithNavigate>

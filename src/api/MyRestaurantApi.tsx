@@ -201,3 +201,32 @@ export const useGetArchivedOrders = () => {
     return Array.isArray(response.data) ? response.data : [];
   });
 };
+
+export const useGetMyArchivedOrders = () => {
+  const { getAccessTokenSilently } = useAuth0();
+
+  const fetchArchivedOrders = async (): Promise<Order[]> => {
+    const accessToken = await getAccessTokenSilently();
+    const response = await fetch(`${API_BASE_URL}/api/order/archived`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to get archived orders");
+    }
+
+    return response.json();
+  };
+
+  const { data: orders = [], isLoading } = useQuery(
+    "fetchMyArchivedOrders",
+    fetchArchivedOrders,
+    {
+      refetchInterval: 5000,
+      staleTime: 0,
+      cacheTime: 0,
+    }
+  );
+
+  return { orders, isLoading };
+};

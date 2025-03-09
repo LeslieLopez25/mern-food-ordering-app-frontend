@@ -5,7 +5,7 @@ import UsernameMenu from "./UsernameMenu";
 
 const MainNav = () => {
   const { loginWithRedirect, isAuthenticated } = useAuth0();
-  const { orders: archivedOrders, isLoading } = useGetArchivedOrders();
+  const { archivedOrders, isLoading } = useGetArchivedOrders();
 
   return (
     <span className="flex space-x-2 items-center">
@@ -33,7 +33,13 @@ const MainNav = () => {
       ) : (
         <button
           className="font-bold hover:text-orange-500 hover:bg-white"
-          onClick={async () => await loginWithRedirect()}
+          onClick={async () =>
+            await loginWithRedirect({
+              authorizationParams: {
+                prompt: "login",
+              },
+            })
+          }
         >
           Log In
         </button>

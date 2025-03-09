@@ -1,6 +1,6 @@
 import {
   useCreateMyRestaurant,
-  useGetArchivedOrders,
+  useGetMyArchivedOrders,
   useGetMyRestaurant,
   useGetMyRestaurantOrders,
   useUpdateMyRestaurant,
@@ -17,8 +17,8 @@ const ManageRestaurantPage = () => {
     useUpdateMyRestaurant();
 
   const { orders } = useGetMyRestaurantOrders();
-  const { data: archivedOrders = [], isLoading: isArchivedLoading } =
-    useGetArchivedOrders();
+  const { orders: archivedOrders = [], isLoading: isArchivedLoading } =
+    useGetMyArchivedOrders();
 
   const isEditing = !!restaurant && !!restaurant.imageUrl;
 

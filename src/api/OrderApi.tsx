@@ -38,7 +38,7 @@ export const useGetMyOrders = () => {
 };
 
 export const useArchiveOrder = () => {
-  const { getAccessTokenSilently } = useAuth0();
+  const { getAccessTokenSilently, user } = useAuth0();
   const queryClient = useQueryClient();
 
   const archiveOrderRequest = async (orderId: string) => {
@@ -66,6 +66,7 @@ export const useArchiveOrder = () => {
       toast.success("Order archived successfully");
       queryClient.invalidateQueries("fetchMyOrders");
       queryClient.invalidateQueries("fetchArchivedOrders");
+      queryClient.invalidateQueries(["fetchArchivedOrders", user?.sub]);
     },
     onError: () => {
       toast.error("Failed to archive order");
@@ -75,17 +76,11 @@ export const useArchiveOrder = () => {
   return { archiveOrder, isLoading };
 };
 
-export const useGetArchivedOrders = () => {
-  const { getAccessTokenSilently, user } = useAuth0();
-
+export const useGetArchivedOrders = (restaurantId?: string) => {
   const fetchArchivedOrders = async (): Promise<Order[]> => {
-    const accessToken = await getAccessTokenSilently();
-
-    const response = await fetch(`${API_BASE_URL}/api/order/archived`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const response = await fetch(
+      `${API_BASE_URL}/api/orders/archived/${restaurantId}`
+    );
 
     if (!response.ok) {
       throw new Error("Failed to get archived orders");
@@ -94,17 +89,13 @@ export const useGetArchivedOrders = () => {
     return response.json();
   };
 
-  const { data: orders, isLoading } = useQuery(
-    ["fetchArchivedOrders", user?.sub],
+  const { data, isLoading, error } = useQuery(
+    ["fetchArchivedOrders", restaurantId],
     fetchArchivedOrders,
-    {
-      refetchInterval: 5000,
-      staleTime: 0,
-      cacheTime: 0,
-    }
+    { enabled: !!restaurantId }
   );
 
-  return { orders, isLoading };
+  return { archivedOrders: data || [], isLoading, error };
 };
 
 export const useArchiveOrders = () => {
