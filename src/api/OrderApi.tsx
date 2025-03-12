@@ -1,6 +1,6 @@
 import { Order } from "@/types";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { toast } from "sonner";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -24,99 +24,15 @@ export const useGetMyOrders = () => {
     return response.json();
   };
 
-  const {
-    data: orders,
-    isLoading,
-    refetch,
-  } = useQuery("fetchMyOrders", getMyOrdersRequest, {
-    refetchInterval: 5000,
-    staleTime: 0,
-    cacheTime: 0,
-  });
-
-  return { orders, isLoading, refetch };
-};
-
-export const useArchiveOrder = () => {
-  const { getAccessTokenSilently, user } = useAuth0();
-  const queryClient = useQueryClient();
-
-  const archiveOrderRequest = async (orderId: string) => {
-    const accessToken = await getAccessTokenSilently();
-
-    const response = await fetch(
-      `${API_BASE_URL}/api/order/${orderId}/archive`,
-      {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to archive order");
+  const { data: orders, isLoading } = useQuery(
+    "fetchMyOrders",
+    getMyOrdersRequest,
+    {
+      refetchInterval: 5000,
     }
-
-    return response.json();
-  };
-
-  const { mutate: archiveOrder, isLoading } = useMutation(archiveOrderRequest, {
-    onSuccess: () => {
-      toast.success("Order archived successfully");
-      queryClient.invalidateQueries("fetchMyOrders");
-      queryClient.invalidateQueries("fetchArchivedOrders");
-      queryClient.invalidateQueries(["fetchArchivedOrders", user?.sub]);
-    },
-    onError: () => {
-      toast.error("Failed to archive order");
-    },
-  });
-
-  return { archiveOrder, isLoading };
-};
-
-export const useGetArchivedOrders = (restaurantId?: string) => {
-  const fetchArchivedOrders = async (): Promise<Order[]> => {
-    const response = await fetch(
-      `${API_BASE_URL}/api/orders/archived/${restaurantId}`
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to get archived orders");
-    }
-
-    return response.json();
-  };
-
-  const { data, isLoading, error } = useQuery(
-    ["fetchArchivedOrders", restaurantId],
-    fetchArchivedOrders,
-    { enabled: !!restaurantId }
   );
 
-  return { archivedOrders: data || [], isLoading, error };
-};
-
-export const useArchiveOrders = () => {
-  const { getAccessTokenSilently } = useAuth0();
-
-  const archiveOrdersRequest = async () => {
-    const accessToken = await getAccessTokenSilently();
-    const response = await fetch(`${API_BASE_URL}/api/order/archive-orders`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to archive orders");
-    }
-  };
-
-  return useMutation(archiveOrdersRequest);
+  return { orders, isLoading };
 };
 
 type CheckoutSessionRequest = {

@@ -1,15 +1,15 @@
-import { useCreateCheckoutSession } from "@/api/OrderApi";
 import { useGetRestaurant } from "@/api/RestaurantApi";
-import CheckoutButton from "@/components/CheckoutButton";
 import MenuItem from "@/components/MenuItem";
 import OrderSummary from "@/components/OrderSummary";
 import RestaurantInfo from "@/components/RestaurantInfo";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Card, CardFooter } from "@/components/ui/card";
-import { UserFormData } from "@/forms/user-profile-form/UserProfileForm";
-import { MenuItem as MenuItemType } from "@/types";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { MenuItem as MenuItemType } from "../types";
+import CheckoutButton from "@/components/CheckoutButton";
+import { UserFormData } from "@/forms/user-profile-form/UserProfileForm";
+import { useCreateCheckoutSession } from "@/api/OrderApi";
 
 export type CartItem = {
   _id: string;
@@ -112,7 +112,7 @@ const DetailPage = () => {
     <div className="flex flex-col gap-10">
       <AspectRatio ratio={16 / 5}>
         <img
-          src={restaurant.lastUpdated}
+          src={restaurant.imageUrl}
           className="rounded-md object-cover h-full w-full"
         />
       </AspectRatio>

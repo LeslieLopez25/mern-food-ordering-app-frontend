@@ -5,9 +5,9 @@ import AppRoutes from "./AppRoutes";
 import Auth0ProviderWithNavigate from "./auth/Auth0ProviderWithNavigate";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Toaster } from "sonner";
+import TokenRefresher from "./components/TokenRefresher";
 
 import "./global.css";
-import TokenRefresher from "./components/TokenRefresher";
 
 const queryClient = new QueryClient({
   defaultOptions: {

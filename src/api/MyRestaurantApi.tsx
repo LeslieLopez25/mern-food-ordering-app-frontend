@@ -2,7 +2,6 @@ import { Order, Restaurant } from "@/types";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useMutation, useQuery } from "react-query";
 import { toast } from "sonner";
-import axios from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -193,40 +192,4 @@ export const useUpdateMyRestaurantOrder = () => {
   }
 
   return { updateRestaurantStatus, isLoading };
-};
-
-export const useGetArchivedOrders = () => {
-  return useQuery<Order[]>("archivedOrders", async () => {
-    const response = await axios.get("/api/order/archived");
-    return Array.isArray(response.data) ? response.data : [];
-  });
-};
-
-export const useGetMyArchivedOrders = () => {
-  const { getAccessTokenSilently } = useAuth0();
-
-  const fetchArchivedOrders = async (): Promise<Order[]> => {
-    const accessToken = await getAccessTokenSilently();
-    const response = await fetch(`${API_BASE_URL}/api/order/archived`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to get archived orders");
-    }
-
-    return response.json();
-  };
-
-  const { data: orders = [], isLoading } = useQuery(
-    "fetchMyArchivedOrders",
-    fetchArchivedOrders,
-    {
-      refetchInterval: 5000,
-      staleTime: 0,
-      cacheTime: 0,
-    }
-  );
-
-  return { orders, isLoading };
 };
