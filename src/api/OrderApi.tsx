@@ -24,15 +24,15 @@ export const useGetMyOrders = () => {
     return response.json();
   };
 
-  const { data: orders, isLoading } = useQuery(
-    "fetchMyOrders",
-    getMyOrdersRequest,
-    {
-      refetchInterval: 5000,
-    }
-  );
+  const {
+    data: orders,
+    isLoading,
+    refetch,
+  } = useQuery("fetchMyOrders", getMyOrdersRequest, {
+    refetchInterval: 5000,
+  });
 
-  return { orders, isLoading };
+  return { orders, isLoading, refetch };
 };
 
 type CheckoutSessionRequest = {
