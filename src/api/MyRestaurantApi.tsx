@@ -134,12 +134,15 @@ export const useGetMyRestaurantOrders = () => {
     return response.json();
   };
 
-  const { data: orders, isLoading } = useQuery(
-    "fetchMyRestaurantOrders",
-    getMyRestaurantOrdersRequest
-  );
+  const {
+    data: orders,
+    isLoading,
+    refetch,
+  } = useQuery("fetchMyRestaurantOrders", getMyRestaurantOrdersRequest, {
+    refetchInterval: 5000,
+  });
 
-  return { orders, isLoading };
+  return { orders, isLoading, refetch };
 };
 
 type UpdateOrderStatusRequest = {
@@ -192,4 +195,48 @@ export const useUpdateMyRestaurantOrder = () => {
   }
 
   return { updateRestaurantStatus, isLoading };
+};
+
+export const useDeleteOrder = () => {
+  const { getAccessTokenSilently } = useAuth0();
+
+  const deleteOrderRequest = async (orderId: string) => {
+    const accessToken = await getAccessTokenSilently();
+
+    const response = await fetch(
+      `${API_BASE_URL}/api/my/restaurant/order/${orderId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to delete order");
+    }
+
+    return response.json();
+  };
+
+  const {
+    mutateAsync: deleteOrder,
+    isLoading,
+    isError,
+    isSuccess,
+    reset,
+  } = useMutation(deleteOrderRequest);
+
+  if (isSuccess) {
+    toast.success("Order removed successfully");
+  }
+
+  if (isError) {
+    toast.error("Unable to remove order");
+    reset();
+  }
+
+  return { deleteOrder, isLoading };
 };

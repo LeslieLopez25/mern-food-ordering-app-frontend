@@ -12,27 +12,53 @@ import {
   SelectValue,
 } from "./ui/select";
 import { ORDER_STATUS } from "./config/order-status-config";
-import { useUpdateMyRestaurantOrder } from "@/api/MyRestaurantApi";
+import {
+  useUpdateMyRestaurantOrder,
+  useDeleteOrder,
+} from "@/api/MyRestaurantApi";
 
 type Props = {
   order: Order;
   isArchived?: boolean;
+  onRemove?: () => void;
 };
 
-const OrderItemCard = ({ order, isArchived = false }: Props) => {
+const OrderItemCard = ({ order, isArchived = false, onRemove }: Props) => {
   const { updateRestaurantStatus, isLoading } = useUpdateMyRestaurantOrder();
+  const { deleteOrder } = useDeleteOrder();
   const [status, setStatus] = useState<OrderStatus>(order.status);
+  const [showRemoveButton, setShowRemoveButton] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    setStatus(order.status);
-  }, [order.status]);
+    if (status === "delivered") {
+      const timer = setTimeout(() => {
+        setShowRemoveButton(true);
+      }, 7000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [status]);
 
   const handleStatusChange = async (newStatus: OrderStatus) => {
     await updateRestaurantStatus({
       orderId: order._id as string,
       status: newStatus,
     });
+
     setStatus(newStatus);
+
+    if (newStatus === "delivered") {
+      setTimeout(() => {
+        setShowRemoveButton(true);
+      }, 7000);
+    }
+  };
+
+  const handleRemoveOrder = async () => {
+    await deleteOrder(order._id as string);
+    setIsVisible(false);
+    if (onRemove) onRemove();
   };
 
   const getTime = () => {
@@ -40,9 +66,10 @@ const OrderItemCard = ({ order, isArchived = false }: Props) => {
     const hours = orderDateTime.getHours();
     const minutes = orderDateTime.getMinutes();
     const paddedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-
     return `${hours}:${paddedMinutes}`;
   };
+
+  if (!isVisible) return null;
 
   return (
     <Card>
@@ -76,7 +103,7 @@ const OrderItemCard = ({ order, isArchived = false }: Props) => {
       <CardContent className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
           {order.cartItems.map((cartItem) => (
-            <span>
+            <span key={cartItem.menuItemId}>
               <Badge variant="outline" className="mr-2">
                 {cartItem.quantity}
               </Badge>
@@ -106,6 +133,17 @@ const OrderItemCard = ({ order, isArchived = false }: Props) => {
               </SelectContent>
             </Select>
           </div>
+        )}
+        {status === "delivered" && showRemoveButton && (
+          <button
+            onClick={handleRemoveOrder}
+            className="px-4 py-2 bg-red-500 text-white rounded-md"
+          >
+            X
+          </button>
+        )}
+        {status === "delivered" && !showRemoveButton && (
+          <span className="text-sm text-gray-500">Removing soon...</span>
         )}
       </CardContent>
     </Card>

@@ -15,7 +15,7 @@ const ManageRestaurantPage = () => {
   const { updateRestaurant, isLoading: isUpdateLoading } =
     useUpdateMyRestaurant();
 
-  const { orders } = useGetMyRestaurantOrders();
+  const { orders, refetch } = useGetMyRestaurantOrders();
 
   const isEditing = !!restaurant;
 
@@ -31,7 +31,7 @@ const ManageRestaurantPage = () => {
       >
         <h2 className="text-2xl font-bold">{orders?.length} active orders</h2>
         {orders?.map((order) => (
-          <OrderItemCard order={order} />
+          <OrderItemCard order={order} onRemove={refetch} />
         ))}
       </TabsContent>
       <TabsContent value="manage-restaurant">

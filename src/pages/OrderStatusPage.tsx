@@ -23,7 +23,7 @@ const OrderStatusPage = () => {
         }));
       }
     });
-  }, [orders, deliveredTimestamps]);
+  }, [orders]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -39,7 +39,7 @@ const OrderStatusPage = () => {
           }
           if (elapsed >= 7000 && !removedOrderIds.includes(order._id)) {
             setRemovedOrderIds((prev) => [...prev, order._id]);
-            refetch();
+            setTimeout(() => refetch(), 500);
           }
         }
       });
