@@ -16,6 +16,7 @@ import {
   useUpdateMyRestaurantOrder,
   useDeleteOrder,
 } from "@/api/MyRestaurantApi";
+import { toast } from "sonner";
 
 type Props = {
   order: Order;
@@ -41,13 +42,19 @@ const OrderItemCard = ({ order, isArchived = false, onRemove }: Props) => {
   }, [status]);
 
   const handleStatusChange = async (newStatus: OrderStatus) => {
-    await updateRestaurantStatus({
-      orderId: order._id as string,
-      status: newStatus,
-    });
+    if (newStatus !== status)
+      try {
+        await updateRestaurantStatus({
+          orderId: order._id as string,
+          status: newStatus,
+        });
 
-    setStatus(newStatus);
-
+        setStatus(newStatus);
+        toast.success("Order updated");
+      } catch (error) {
+        console.error("Error updating order:", error);
+        toast.error("Failed to update order");
+      }
     if (newStatus === "delivered") {
       setTimeout(() => {
         setShowRemoveButton(true);

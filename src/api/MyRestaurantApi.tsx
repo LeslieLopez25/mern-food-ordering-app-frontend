@@ -182,19 +182,9 @@ export const useUpdateMyRestaurantOrder = () => {
     isLoading,
     isError,
     isSuccess,
-    reset,
   } = useMutation(updateMyRestaurantOrder);
 
-  if (isSuccess) {
-    toast.success("Order updated");
-  }
-
-  if (isError) {
-    toast.error("Unable to update order");
-    reset();
-  }
-
-  return { updateRestaurantStatus, isLoading };
+  return { updateRestaurantStatus, isLoading, isError, isSuccess };
 };
 
 export const useDeleteOrder = () => {
