@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+// Fetches the current logged-in user's details
 export const useGetMyUser = () => {
   const { getAccessTokenSilently } = useAuth0();
 
@@ -44,6 +45,7 @@ type CreateUserRequest = {
   email: string;
 };
 
+// Creates a new user in the database after authentication
 export const useCreateMyUser = () => {
   const { getAccessTokenSilently } = useAuth0();
 
@@ -85,6 +87,7 @@ type UpdateMyUserRequest = {
   country: string;
 };
 
+// Updates the current user's profile information
 export const useUpdateMyUser = () => {
   const { getAccessTokenSilently } = useAuth0();
 
