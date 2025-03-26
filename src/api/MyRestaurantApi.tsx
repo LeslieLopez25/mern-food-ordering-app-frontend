@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+// Hook to fetch the current user's restaurant details
 export const useGetMyRestaurant = () => {
   const { getAccessTokenSilently } = useAuth0();
 
@@ -32,6 +33,7 @@ export const useGetMyRestaurant = () => {
   return { restaurant, isLoading };
 };
 
+// Hook to create a restaurant
 export const useCreateMyRestaurant = () => {
   const { getAccessTokenSilently } = useAuth0();
 
@@ -45,7 +47,7 @@ export const useCreateMyRestaurant = () => {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      body: restaurantFormData,
+      body: restaurantFormData, // Send form data for restaurant creation
     });
 
     if (!response.ok) {
@@ -73,6 +75,7 @@ export const useCreateMyRestaurant = () => {
   return { createRestaurant, isLoading };
 };
 
+// Hook to update restaurant details
 export const useUpdateMyRestaurant = () => {
   const { getAccessTokenSilently } = useAuth0();
 
@@ -114,6 +117,7 @@ export const useUpdateMyRestaurant = () => {
   return { updateRestaurant, isLoading };
 };
 
+// Hook to fetch all orders for the restaurant
 export const useGetMyRestaurantOrders = () => {
   const { getAccessTokenSilently } = useAuth0();
 
@@ -150,6 +154,7 @@ type UpdateOrderStatusRequest = {
   status: string;
 };
 
+// Hook to update an order's status (e.g., from pending to delivered)
 export const useUpdateMyRestaurantOrder = () => {
   const { getAccessTokenSilently } = useAuth0();
 
@@ -161,7 +166,7 @@ export const useUpdateMyRestaurantOrder = () => {
     const response = await fetch(
       `${API_BASE_URL}/api/my/restaurant/order/${updateStatusOrderRequest.orderId}/status`,
       {
-        method: "PATCH",
+        method: "PATCH", // PATCH method to update status
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
@@ -187,6 +192,7 @@ export const useUpdateMyRestaurantOrder = () => {
   return { updateRestaurantStatus, isLoading, isError, isSuccess };
 };
 
+// Hook to delete an order
 export const useDeleteOrder = () => {
   const { getAccessTokenSilently } = useAuth0();
 
