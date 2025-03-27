@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+// Fetch user's orders (auto-refresher every 5s for real-time updates)
 export const useGetMyOrders = () => {
   const { getAccessTokenSilently } = useAuth0();
 
@@ -50,6 +51,7 @@ type CheckoutSessionRequest = {
   restaurantId: string;
 };
 
+// Creates a checkout session (needed for processing payments)
 export const useCreateCheckoutSession = () => {
   const { getAccessTokenSilently } = useAuth0();
 
