@@ -25,6 +25,7 @@ const CheckoutButton = ({ onCheckout, disabled, isLoading }: Props) => {
 
   const { currentUser, isLoading: isGetUserLoading } = useGetMyUser();
 
+  // Redirect to login if user is not authenticated
   const onLogin = async () => {
     await loginWithRedirect({
       appState: {
@@ -45,6 +46,7 @@ const CheckoutButton = ({ onCheckout, disabled, isLoading }: Props) => {
     return <LoadingButton />;
   }
 
+  // Opens checkout form in a dialog
   return (
     <Dialog>
       <DialogTrigger asChild>
