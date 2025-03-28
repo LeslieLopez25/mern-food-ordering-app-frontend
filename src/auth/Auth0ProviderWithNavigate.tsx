@@ -5,6 +5,7 @@ type Props = {
   children: React.ReactNode;
 };
 
+// Wraps the app with Auth0 authentication, handling login, logout, and redirects
 const Auth0ProviderWithNavigate = ({ children }: Props) => {
   const navigate = useNavigate();
 
@@ -17,6 +18,7 @@ const Auth0ProviderWithNavigate = ({ children }: Props) => {
     throw new Error("Unable to initialize auth");
   }
 
+  // Redirects users after login to the original page or default route
   const onRedirectCallback = (appState?: AppState) => {
     navigate(appState?.returnTo || "/auth-callback");
   };
@@ -28,11 +30,11 @@ const Auth0ProviderWithNavigate = ({ children }: Props) => {
       authorizationParams={{
         redirect_uri: redirectUri,
         audience,
-        scope: "openid profile email offline_access",
+        scope: "openid profile email offline_access", // Request user and email access
       }}
       onRedirectCallback={onRedirectCallback}
-      cacheLocation="localstorage"
-      useRefreshTokens={true}
+      cacheLocation="localstorage" // Store tokens in localstorage for persistence
+      useRefreshTokens={true} // Use refresh tokens for session longevity
     >
       {children}
     </Auth0Provider>
