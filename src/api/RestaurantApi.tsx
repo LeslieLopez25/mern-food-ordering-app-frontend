@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+// Fetch a restaurant's detail using its ID
 export const useGetRestaurant = (restaurantId?: string) => {
   const getRestaurantByIdRequest = async (): Promise<Restaurant> => {
     const response = await fetch(
@@ -28,6 +29,7 @@ export const useGetRestaurant = (restaurantId?: string) => {
   return { restaurant, isLoading };
 };
 
+// Searches for restaurant based on user input (query, filters, sorting)
 export const useSearchRestaurants = (
   searchState: SearchState,
   city?: string
