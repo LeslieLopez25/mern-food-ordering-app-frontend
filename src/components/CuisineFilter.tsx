@@ -17,6 +17,7 @@ const CuisineFilter = ({
   isExpanded,
   onExpandedClick,
 }: Props) => {
+  // Updates selected cuisines when user checks/unchecks a box
   const handleCuisinesChange = (event: ChangeEvent<HTMLInputElement>) => {
     const clickedCuisine = event.target.value;
     const isChecked = event.target.checked;
@@ -28,6 +29,7 @@ const CuisineFilter = ({
     onChange(newCuisinesList);
   };
 
+  // Clears all selected cuisines
   const handleCuisinesReset = () => onChange([]);
 
   return (
