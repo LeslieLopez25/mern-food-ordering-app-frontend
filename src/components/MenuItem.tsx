@@ -8,6 +8,7 @@ type Props = {
 
 const MenuItem = ({ menuItem, addToCart }: Props) => {
   return (
+    // Clickable menu item card to add item to cart
     <Card className="cursor-pointer" onClick={addToCart}>
       <CardHeader>
         <CardTitle>{menuItem.name}</CardTitle>
