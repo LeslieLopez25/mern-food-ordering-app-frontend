@@ -31,6 +31,7 @@ const OrderItemCard = ({ order, isArchived = false, onRemove }: Props) => {
   const [showRemoveButton, setShowRemoveButton] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
+  // Show remove button after 7 seconds if order is "delivered"
   useEffect(() => {
     if (status === "delivered") {
       const timer = setTimeout(() => {
@@ -41,6 +42,7 @@ const OrderItemCard = ({ order, isArchived = false, onRemove }: Props) => {
     }
   }, [status]);
 
+  // Handle status update and trigger API call
   const handleStatusChange = async (newStatus: OrderStatus) => {
     if (newStatus !== status)
       try {
@@ -62,12 +64,14 @@ const OrderItemCard = ({ order, isArchived = false, onRemove }: Props) => {
     }
   };
 
+  // Remove order from system
   const handleRemoveOrder = async () => {
     await deleteOrder(order._id as string);
     setIsVisible(false);
     if (onRemove) onRemove();
   };
 
+  // Format order time
   const getTime = () => {
     const orderDateTime = new Date(order.createdAt);
     const hours = orderDateTime.getHours();
