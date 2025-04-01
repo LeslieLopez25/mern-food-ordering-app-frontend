@@ -7,6 +7,7 @@ type Props = {
 };
 
 const OrderStatusHeader = ({ order }: Props) => {
+  // Calculates expected delivery time based on restaurant's estimate
   const getExpectedDelivery = () => {
     const created = new Date(order.createdAt);
 
@@ -22,6 +23,7 @@ const OrderStatusHeader = ({ order }: Props) => {
     return `${hours}:${paddedMinutes}`;
   };
 
+  // Retrieves the order status details (label and progress value)
   const getOrderStatusInfo = () => {
     return (
       ORDER_STATUS.find((o) => o.value === order.status) || ORDER_STATUS[0]
@@ -34,6 +36,7 @@ const OrderStatusHeader = ({ order }: Props) => {
         <span>Order Status: {getOrderStatusInfo().label}</span>
         <span>Expected by: {getExpectedDelivery()}</span>
       </h1>
+      {/* Progress bar for order status */}
       <Progress
         className="animate-pulse"
         value={getOrderStatusInfo().progressValue}
