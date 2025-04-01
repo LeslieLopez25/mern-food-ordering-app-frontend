@@ -12,6 +12,7 @@ type Props = {
 };
 
 const OrderSummary = ({ restaurant, cartItems, removeFromCart }: Props) => {
+  // Calculates the total cost including delivery fee
   const getTotalCost = () => {
     const totalInCentavo = cartItems.reduce(
       (total, cartItem) => total + cartItem.price * cartItem.quantity,
@@ -31,6 +32,7 @@ const OrderSummary = ({ restaurant, cartItems, removeFromCart }: Props) => {
           <span>${getTotalCost()}</span>
         </CardTitle>
       </CardHeader>
+      {/* Order items list */}
       <CardContent className="flex flex-col gap-5">
         {cartItems.map((item) => (
           <div className="flex justify-between">
@@ -52,6 +54,7 @@ const OrderSummary = ({ restaurant, cartItems, removeFromCart }: Props) => {
           </div>
         ))}
         <Separator />
+        {/* Delivery fee */}
         <div className="flex justify-between">
           <span>Delivery</span>
           <span>${(restaurant.deliveryPrice / 100).toFixed(2)}</span>
