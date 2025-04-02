@@ -7,6 +7,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useEffect } from "react";
 
+// Define validation schema for search form using Zod
 const formSchema = z.object({
   searchQuery: z.string({
     required_error: "Restaurant name is required",
@@ -23,6 +24,7 @@ type Props = {
 };
 
 const SearchBar = ({ onSubmit, onReset, placeHolder, searchQuery }: Props) => {
+  //  Initialize form using react-hook-form with Zod validation
   const form = useForm<SearchForm>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -34,6 +36,7 @@ const SearchBar = ({ onSubmit, onReset, placeHolder, searchQuery }: Props) => {
     form.reset({ searchQuery });
   }, [form, searchQuery]);
 
+  // Function to reset the search input and trigger onReset callback (if provided)
   const handleReset = () => {
     form.reset({
       searchQuery: "",
