@@ -70,6 +70,7 @@ const ManageRestaurantForm = ({ onSave, isLoading, restaurant }: Props) => {
       return;
     }
 
+    // Format restaurant data to match form expectations
     const deliveryPriceFormatted = parseInt(
       (restaurant.deliveryPrice / 100).toFixed(2)
     );
