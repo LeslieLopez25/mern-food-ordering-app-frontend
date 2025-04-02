@@ -27,6 +27,7 @@ const SORT_OPTIONS = [
 ];
 
 const SortOptionDropdown = ({ onChange, sortOption }: Props) => {
+  // Find the label of the currently selected sort option, default to first option if not found
   const selectedSortLabel =
     SORT_OPTIONS.find((option) => option.value === sortOption)?.label ||
     SORT_OPTIONS[0].label;
