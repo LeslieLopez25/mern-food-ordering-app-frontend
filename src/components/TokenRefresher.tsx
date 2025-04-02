@@ -8,6 +8,7 @@ const TokenRefresher = () => {
     const refreshToken = async () => {
       if (isAuthenticated) {
         try {
+          // Define token retrieval options, including audience and scope
           const options: GetTokenSilentlyOptions & {
             audience: string;
             scope: string;
@@ -16,6 +17,7 @@ const TokenRefresher = () => {
             scope: "openid profile email offline_access",
             cacheMode: "off",
           };
+          // Fetch a new access token silently
           const token = await getAccessTokenSilently(options);
           console.log("New Access Token:", token);
         } catch (error) {
