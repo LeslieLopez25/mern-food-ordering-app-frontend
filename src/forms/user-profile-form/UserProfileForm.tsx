@@ -16,6 +16,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+// Validation schema for the user profile form
 const formSchema = z.object({
   email: z.string().optional(),
   name: z.string().min(1, "Name is required"),
@@ -41,6 +42,7 @@ const UserProfileForm = ({
   title = "User Profile",
   buttonText = "Submit",
 }: Props) => {
+  // Initialize form with default values and validation
   const form = useForm<UserFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: currentUser,
