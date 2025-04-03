@@ -6,6 +6,7 @@ import MenuItemInput from "./MenuItemInput";
 const MenuSection = () => {
   const { control } = useFormContext();
 
+  // useFieldArray allows dynamic form fields (adding/removing menu items)
   const { fields, append, remove } = useFieldArray({
     control,
     name: "menuItems",
