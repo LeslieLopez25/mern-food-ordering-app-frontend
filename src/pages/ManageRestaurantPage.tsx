@@ -17,7 +17,7 @@ const ManageRestaurantPage = () => {
 
   const { orders, refetch } = useGetMyRestaurantOrders();
 
-  const isEditing = !!restaurant;
+  const isEditing = !!restaurant; // True if restaurant already exists
 
   return (
     <Tabs defaultValue="orders">
