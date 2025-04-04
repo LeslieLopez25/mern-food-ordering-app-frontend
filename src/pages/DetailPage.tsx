@@ -24,11 +24,13 @@ const DetailPage = () => {
   const { createCheckoutSession, isLoading: isCheckoutLoading } =
     useCreateCheckoutSession();
 
+  // Load cart from sessionStorage if it exists
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     const storedCartItems = sessionStorage.getItem(`cartItems-${restaurantId}`);
     return storedCartItems ? JSON.parse(storedCartItems) : [];
   });
 
+  // Add item to cart (or increase quantity)
   const addToCart = (menuItem: MenuItemType) => {
     setCartItems((prevCartItems) => {
       const existingCartItem = prevCartItems.find(
@@ -55,6 +57,7 @@ const DetailPage = () => {
         ];
       }
 
+      // Save updated cart to session storage
       sessionStorage.setItem(
         `cartItems-${restaurantId}`,
         JSON.stringify(updatedCartItems)
@@ -79,6 +82,7 @@ const DetailPage = () => {
     });
   };
 
+  // Handle checkout (send cart + user info to backend)
   const onCheckout = async (userFormData: UserFormData) => {
     if (!restaurant) {
       return;
@@ -100,6 +104,7 @@ const DetailPage = () => {
       },
     };
 
+    // Create Stripe checkout session and redirect to payment page
     const data = await createCheckoutSession(checkoutData);
     window.location.href = data.url;
   };
