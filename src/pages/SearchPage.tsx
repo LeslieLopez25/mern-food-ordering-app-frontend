@@ -28,6 +28,7 @@ const SearchPage = () => {
 
   const { results, isLoading } = useSearchRestaurants(searchState, city);
 
+  // State update helpers
   const setSortOption = (sortOption: string) => {
     setSearchState((prevState) => ({
       ...prevState,
@@ -67,6 +68,7 @@ const SearchPage = () => {
     }));
   };
 
+  // Loading/Error States
   if (isLoading) {
     <span>Loading...</span>;
   }
