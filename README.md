@@ -1,8 +1,8 @@
-Frontend – Food Ordering App
+# Frontend – MernEats Food Ordering App
 
 This folder contains the frontend for the Food Ordering App. It’s a modern web client built with React, designed for both users and restaurant owners to browse, order, and manage food orders seamlessly.
 
-Technologies Used
+## Technologies Used
 
     React – Frontend UI framework
 
@@ -22,7 +22,7 @@ Technologies Used
 
     Cloudinary – Image hosting for restaurants and menus
 
-Getting Started
+## Getting Started
 
 To get started with the frontend locally:
 
@@ -31,11 +31,11 @@ To get started with the frontend locally:
 
 `cd frontend`
 
-Install dependencies
+Install dependencies:
 
 `npm install`
 
-Start the development server
+Start the development server:
 
 `npm run dev`
 
@@ -45,14 +45,14 @@ Environment Variables
 
 Create a `.env` file in the frontend directory with the following variables:
 
-VITE_API_BASE_URL=http://localhost:7000/api
-VITE_AUTH0_DOMAIN=your-auth0-domain
-VITE_AUTH0_CLIENT_ID=your-auth0-client-id
-VITE_AUTH0_AUDIENCE=your-auth0-api-identifier
+    VITE_API_BASE_URL=http://localhost:7000/api
+    VITE_AUTH0_DOMAIN=your-auth0-domain
+    VITE_AUTH0_CLIENT_ID=your-auth0-client-id
+    VITE_AUTH0_AUDIENCE=your-auth0-api-identifier
 
 Make sure these match the values in your Auth0 and backend setup.
 
-Features
+## Features
 
     ✅ User registration and login via Auth0
 
