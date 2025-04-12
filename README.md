@@ -1,6 +1,6 @@
 # Frontend – MernEats Food Ordering App
 
-This folder contains the frontend for the Food Ordering App. It’s a modern web client built with React, designed for both users and restaurant owners to browse, order, and manage food orders seamlessly.
+This folder contains the frontend for the MernEats Food Ordering App. It’s a modern web client built with React, designed for both users and restaurant owners to browse, order, and manage food orders seamlessly.
 
 ## Technologies Used
 
