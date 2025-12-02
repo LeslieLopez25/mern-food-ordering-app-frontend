@@ -1,12 +1,13 @@
+import React from "react";
 import { AppState, Auth0Provider } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 
-type Props = {
+// Wraps the app with Auth0 authentication or a mock Auth0 context during E2E tests
+const Auth0ProviderWithNavigate = ({
+  children,
+}: {
   children: React.ReactNode;
-};
-
-// Wraps the app with Auth0 authentication, handling login, logout, and redirects
-const Auth0ProviderWithNavigate = ({ children }: Props) => {
+}) => {
   const navigate = useNavigate();
 
   const domain = import.meta.env.VITE_AUTH0_DOMAIN;
@@ -14,15 +15,17 @@ const Auth0ProviderWithNavigate = ({ children }: Props) => {
   const redirectUri = import.meta.env.VITE_AUTH0_CALLBACK_URL;
   const audience = import.meta.env.VITE_AUTH0_AUDIENCE;
 
+  // Sanity check for missing Auth0 credentials
   if (!domain || !clientId || !redirectUri || !audience) {
-    throw new Error("Unable to initialize auth");
+    throw new Error("Missing Auth0 configuration in environment variables.");
   }
 
-  // Redirects users after login to the original page or default route
+  // Normal redirect handler for real Auth0
   const onRedirectCallback = (appState?: AppState) => {
     navigate(appState?.returnTo || "/auth-callback");
   };
 
+  // REAL AUTH0 MODE (normal app usage)
   return (
     <Auth0Provider
       domain={domain}
@@ -30,11 +33,11 @@ const Auth0ProviderWithNavigate = ({ children }: Props) => {
       authorizationParams={{
         redirect_uri: redirectUri,
         audience: audience,
-        scope: "openid profile email", // Request user and email access
+        scope: "openid profile email",
       }}
       onRedirectCallback={onRedirectCallback}
-      cacheLocation="localstorage" // Store tokens in localstorage for persistence
-      useRefreshTokens={true} // Use refresh tokens for session longevity
+      cacheLocation="localstorage"
+      useRefreshTokens={true}
     >
       {children}
     </Auth0Provider>
